@@ -1,5 +1,7 @@
 # frozen-string-literal: true
 
+require 'slop/option'
+
 module Slop
   def self.option_defined?(name)
     const_defined?(string_to_option(name.to_s))
