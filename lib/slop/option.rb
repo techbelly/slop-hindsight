@@ -11,6 +11,8 @@ module Slop
 
     attr_reader :flags
 
+    attr_reader :config
+
     def initialize(flags, desc, **config, &block)
       @flags  = flags
       @desc   = desc
@@ -29,6 +31,16 @@ module Slop
 
     def flag
       flags.join(", ")
+    end
+
+    def key
+      key = config[:key] || flags.last.sub(/\A--?/, '')
+      key = key.tr '-', '_' if underscore_flags?
+      key.to_sym
+    end
+
+    def underscore_flags?
+      config[:underscore_flags]
     end
   end
 end
