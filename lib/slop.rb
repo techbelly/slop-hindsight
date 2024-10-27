@@ -1,6 +1,8 @@
 # frozen-string-literal: true
 
 require 'slop/option'
+require 'slop/options'
+require 'slop/parser'
 
 module Slop
   def self.option_defined?(name)
