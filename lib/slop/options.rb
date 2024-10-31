@@ -14,6 +14,8 @@ module Slop
 
     attr_reader :options
 
+    attr_reader :separators
+
     attr_reader :config
 
     def initialize(**config, &block)
@@ -24,6 +26,10 @@ module Slop
       @parser     = Parser.new(self, **@config)
 
       yield self if block_given?
+    end
+
+    def separator(string = "")
+      separators[options.size] = string
     end
 
     def each(&block)
