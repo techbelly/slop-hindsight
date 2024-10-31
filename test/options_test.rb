@@ -7,6 +7,19 @@ describe Slop::Options do
     @options = Slop::Options.new
   end
 
+  describe "#separator" do
+    it "accepts a frozen argument, even when called multiple times for the same option" do
+      @options.separator("foo".freeze)
+      @options.separator("bar".freeze)
+    end
+
+    it "defaults to empty string" do
+      @options.separator
+
+      assert_equal [""], @options.separators
+    end
+  end
+
   describe "#method_missing" do
     it "raises if a type doesn't exist" do
       assert_raises(NoMethodError) { @options.unknown }
