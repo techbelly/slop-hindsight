@@ -8,6 +8,13 @@ describe Slop::Options do
   end
 
   describe "#separator" do
+    it "appends strings to the last separator if no options exist" do
+      @options.separator("foo")
+      @options.separator("bar")
+
+      assert_equal ["foo\nbar"], @options.separators
+    end
+
     it "accepts a frozen argument, even when called multiple times for the same option" do
       @options.separator("foo".freeze)
       @options.separator("bar".freeze)
