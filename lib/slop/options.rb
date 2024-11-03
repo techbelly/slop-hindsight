@@ -29,7 +29,11 @@ module Slop
     end
 
     def separator(string = "")
-      separators[options.size] = string
+      if separators[options.size]
+        separators[-1] += "\n#{string}"
+      else
+        separators[options.size] = string
+      end
     end
 
     def each(&block)
