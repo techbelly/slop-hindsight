@@ -18,6 +18,8 @@ module Slop
 
     attr_reader :config
 
+    attr_reader :banner
+
     def initialize(**config, &block)
       @options    = []
       @separators = []
@@ -44,6 +46,33 @@ module Slop
       Slop.option_defined?(name) || super
     end
 
+    def to_s(prefix: " " * 4)
+      str = config[:banner] ? "#{banner}\n" : ""
+      len = longest_flag_length
+
+      options.select.each_with_index.sort_by{ |o,i| [o.tail, i] }.each do |opt, i|
+        if sep = separators[i]
+          str += "#{sep}\n"
+        end
+
+        str += "#{prefix}#{opt.to_s(offset: len)}\n" if opt.help?
+      end
+
+      if sep = separators[options.size]
+        str += "#{sep}\n"
+      end
+
+      str
+    end
+
     private
+
+    def longest_flag_length
+      (o = longest_option) && o.flag.length || 0
+    end
+
+    def longest_option
+      options.max { |a, b| a.flag.length <=> b.flag.length }
+    end
   end
 end
