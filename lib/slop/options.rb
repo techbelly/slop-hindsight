@@ -30,6 +30,15 @@ module Slop
       yield self if block_given?
     end
 
+    def on(*flags, **config, &block)
+      desc   = flags.pop unless flags.last.start_with?('-')
+      config = self.config.merge(config)
+      klass  = Slop.string_to_option_class(config[:type].to_s)
+      option = klass.new(flags, desc, **config, &block)
+
+      add_option option
+    end
+
     def separator(string = "")
       if separators[options.size]
         separators[-1] += "\n#{string}"
@@ -40,6 +49,13 @@ module Slop
 
     def each(&block)
       options.each(&block)
+    end
+
+    def method_missing(name, *args, **config, &block)
+      if respond_to_missing?(name)
+        config[:type] = name
+        on(*args, **config, &block)
+      end
     end
 
     def respond_to_missing?(name, include_private = false)
@@ -73,6 +89,19 @@ module Slop
 
     def longest_option
       options.max { |a, b| a.flag.length <=> b.flag.length }
+    end
+
+    def add_option(option)
+      options.each do |o|
+        flags = o.flags & option.flags
+
+        if flags.any?
+          raise ArgumentError, "duplicate flags: #{flags}"
+        end
+      end
+
+      options << option
+      option
     end
   end
 end
