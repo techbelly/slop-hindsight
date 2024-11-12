@@ -7,6 +7,13 @@ describe Slop::Options do
     @options = Slop::Options.new
   end
 
+  describe "#on" do
+    it "accepts custom types" do
+      module Slop; class FooOption < Option; end; end
+      assert_kind_of Slop::FooOption, @options.on("--foo", type: :foo)
+    end
+  end
+
   describe "#separator" do
     it "appends strings to the last separator if no options exist" do
       @options.separator("foo")
@@ -28,8 +35,9 @@ describe Slop::Options do
   end
 
   describe "#method_missing" do
-    it "raises if a type doesn't exist" do
-      assert_raises(NoMethodError) { @options.unknown }
+    it "uses the method name as an option type" do
+      option = @options.string("--name")
+      assert_kind_of Slop::StringOption, option
     end
   end
 

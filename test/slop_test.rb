@@ -11,5 +11,9 @@ describe Slop do
     it "returns false if the option is not defined" do
       assert_equal false, Slop.option_defined?("FooBar")
     end
+
+    it "returns true if the option is defined" do
+      assert_equal true, Slop.option_defined?("String")
+    end
   end
 end
