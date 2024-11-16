@@ -8,13 +8,40 @@ describe Slop::Options do
   end
 
   describe "#on" do
+    it "defaults to null type" do
+      assert_kind_of Slop::NullOption, @options.on("--foo")
+    end
+
     it "accepts custom types" do
       module Slop; class FooOption < Option; end; end
       assert_kind_of Slop::FooOption, @options.on("--foo", type: :foo)
     end
+
+    it "adds multiple flags" do
+      option = @options.on("-f", "-F", "--foo")
+      assert_equal %w(-f -F --foo), option.flags
+    end
+
+    it "adds the option" do
+      option = @options.on("--foo")
+      assert_equal [option], @options.to_a
+    end
+
+    it "raises an error when a duplicate flag is used" do
+      @options.on("--foo")
+      assert_raises(ArgumentError) { @options.on("--foo") }
+    end
   end
 
   describe "#separator" do
+    it "appends separators between options in order" do
+      @options.separator("foo")
+      @options.on("--foo")
+      @options.separator("bar")
+
+      assert_equal ["foo", "bar"], @options.separators
+    end
+
     it "appends strings to the last separator if no options exist" do
       @options.separator("foo")
       @options.separator("bar")
