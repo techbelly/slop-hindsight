@@ -11,6 +11,8 @@ module Slop
 
     attr_reader :flags
 
+    attr_reader :desc
+
     attr_reader :config
 
     def initialize(flags, desc, **config, &block)

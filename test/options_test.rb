@@ -22,6 +22,11 @@ describe Slop::Options do
       assert_equal %w(-f -F --foo), option.flags
     end
 
+    it "accepts a trailing description" do
+      option = @options.on("--foo", "fooey")
+      assert_equal "fooey", option.desc
+    end
+
     it "adds the option" do
       option = @options.on("--foo")
       assert_equal [option], @options.to_a
