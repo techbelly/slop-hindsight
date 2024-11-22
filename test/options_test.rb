@@ -84,6 +84,11 @@ describe Slop::Options do
     it "is prefixed with the default banner" do
       assert_match(/^usage/, @options.to_s)
     end
+
+    it "ignores options with help: false" do
+      @options.on "-x", "something", help: false
+      refute_match(/something/, @options.to_s)
+    end
   end
 
   describe "custom banner" do

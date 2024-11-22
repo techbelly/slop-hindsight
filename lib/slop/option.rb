@@ -44,5 +44,17 @@ module Slop
     def underscore_flags?
       config[:underscore_flags]
     end
+
+    def help?
+      config[:help]
+    end
+
+    def tail?
+      config[:tail]
+    end
+
+    def tail
+      tail? ? 1 : -1
+    end
   end
 end
