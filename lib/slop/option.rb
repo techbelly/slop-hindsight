@@ -56,5 +56,9 @@ module Slop
     def tail
       tail? ? 1 : -1
     end
+
+    def to_s(offset: 0)
+      "%-#{offset}s  %s" % [flag, desc]
+    end
   end
 end
