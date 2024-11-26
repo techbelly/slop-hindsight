@@ -54,6 +54,14 @@ describe Slop::Options do
       assert_equal ["foo\nbar"], @options.separators
     end
 
+    it "includes separators in the help text" do
+      @options.on("--foo")
+      @options.separator("bar")
+
+      help = @options.to_s.squeeze(" ")
+      assert help.end_with?("--foo \nbar\n")
+    end
+
     it "accepts a frozen argument, even when called multiple times for the same option" do
       @options.separator("foo".freeze)
       @options.separator("bar".freeze)
@@ -85,9 +93,27 @@ describe Slop::Options do
       assert_match(/^usage/, @options.to_s)
     end
 
+    it "aligns option strings" do
+      @options.on "-f", "--foo", "fooey"
+      @options.on "-s", "short"
+      assert_match(/^    -f, --foo  fooey/, @options.to_s)
+      assert_match(/^    -s         short/, @options.to_s)
+    end
+
+    it "can use a custom prefix" do
+      @options.on "-f", "--foo"
+      assert_match(/^ -f, --foo/, @options.to_s(prefix: " "))
+    end
+
     it "ignores options with help: false" do
       @options.on "-x", "something", help: false
       refute_match(/something/, @options.to_s)
+    end
+
+    it "adds 'tail' options to the bottom of the help text" do
+      @options.on "-h", "--help", tail: true
+      @options.on "-f", "--foo"
+      assert_match(/^    -h, --help/, @options.to_s.lines.last)
     end
   end
 
