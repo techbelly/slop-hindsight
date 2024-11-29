@@ -6,6 +6,7 @@ module Slop
 
   class BoolOption < Option
   end
+  BooleanOption = BoolOption
 
   class NullOption < BoolOption
   end
