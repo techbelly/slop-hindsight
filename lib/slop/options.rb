@@ -16,6 +16,8 @@ module Slop
 
     attr_reader :separators
 
+    attr_reader :parser
+
     attr_reader :config
 
     attr_reader :banner
@@ -47,6 +49,10 @@ module Slop
       end
     end
 
+    def parse(strings)
+      parser.parse(strings)
+    end
+
     def each(&block)
       options.each(&block)
     end
@@ -60,6 +66,10 @@ module Slop
 
     def respond_to_missing?(name, include_private = false)
       Slop.option_defined?(name) || super
+    end
+
+    def to_a
+      options.dup
     end
 
     def to_s(prefix: " " * 4)
