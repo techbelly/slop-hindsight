@@ -15,6 +15,8 @@ module Slop
 
     attr_reader :config
 
+    attr_reader :count
+
     def initialize(flags, desc, **config, &block)
       @flags  = flags
       @desc   = desc

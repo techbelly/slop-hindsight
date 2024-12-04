@@ -4,6 +4,7 @@ require 'slop/option'
 require 'slop/options'
 require 'slop/parser'
 require 'slop/types'
+require 'slop/error'
 
 module Slop
   def self.option_defined?(name)
