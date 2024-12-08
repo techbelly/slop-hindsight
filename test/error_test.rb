@@ -8,4 +8,10 @@ describe Slop::MissingRequiredOption do
     opts.string "-n", "--name", required: true
     assert_raises(Slop::MissingRequiredOption) { opts.parse [] }
   end
+
+  it "does not raise when errors are suppressed" do
+    opts = Slop::Options.new(suppress_errors: true)
+    opts.string "-n", "--name", required: true
+    opts.parse []
+  end
 end
