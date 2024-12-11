@@ -4,6 +4,10 @@ module Slop
   class Error < StandardError
   end
 
+  class MissingArgument < Error
+    attr_reader :flags
+  end
+
   class MissingRequiredOption < Error
   end
 end
