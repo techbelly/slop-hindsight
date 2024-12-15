@@ -85,6 +85,10 @@ describe Slop::Options do
       option = @options.string("--name")
       assert_kind_of Slop::StringOption, option
     end
+
+    it "raises if a type doesn't exist" do
+      assert_raises(NoMethodError) { @options.unknown }
+    end
   end
 
   describe "#respond_to?" do

@@ -31,6 +31,14 @@ module Slop
       pairs.each_with_index do |pair, idx|
         flag, arg = pair
         break if !flag
+
+        orig_flag = flag.dup
+        if match = flag.match(/([^=]+)=(.*)/)
+          flag, arg = match.captures
+        end
+
+        if opt = try_process(flag, arg)
+        end
       end
 
       @arguments += ignored_args
@@ -59,8 +67,15 @@ module Slop
 
     private
 
+    def try_process(flag, arg)
+    end
+
     def suppress_errors?
       config[:suppress_errors]
+    end
+
+    def matching_option(flag)
+      options.find { |o| o.flags.include?(flag) }
     end
 
     def partition(strings)

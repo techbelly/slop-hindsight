@@ -8,6 +8,10 @@ module Slop
     attr_reader :flags
   end
 
+  class UnknownOption < Error
+    attr_reader :flag
+  end
+
   class MissingRequiredOption < Error
   end
 end
