@@ -16,6 +16,14 @@ describe Slop::MissingArgument do
   end
 end
 
+describe Slop::UnknownOption do
+  it "does not raise when errors are suppressed" do
+    opts = Slop::Options.new(suppress_errors: true)
+    opts.string "-n", "--name"
+    opts.parse %w(--foo)
+  end
+end
+
 describe Slop::MissingRequiredOption do
   it "raises when a required option is missing" do
     opts = Slop::Options.new
