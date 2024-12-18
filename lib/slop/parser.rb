@@ -68,6 +68,9 @@ module Slop
     private
 
     def try_process(flag, arg)
+      if flag.start_with?("-") && !suppress_errors?
+        raise UnknownOption.new("unknown option `#{flag}'", "#{flag}")
+      end
     end
 
     def suppress_errors?
