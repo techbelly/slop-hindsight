@@ -3,6 +3,18 @@
 require 'test_helper'
 
 describe Slop::MissingArgument do
+  it "raises when an argument is missing" do
+    opts = Slop::Options.new
+    opts.string "-n", "--name"
+    assert_raises(Slop::MissingArgument) { opts.parse %w(--name) }
+
+    begin
+      opts.parse %w(--name)
+    rescue Slop::MissingArgument => e
+      assert_equal(e.flags, ["-n", "--name"])
+    end
+  end
+
   it "does not raise when errors are suppressed" do
     opts = Slop::Options.new(suppress_errors: true)
     opts.string "-n", "--name"

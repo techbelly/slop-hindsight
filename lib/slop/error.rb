@@ -6,6 +6,11 @@ module Slop
 
   class MissingArgument < Error
     attr_reader :flags
+
+    def initialize(msg, flags)
+      super(msg)
+      @flags = flags
+    end
   end
 
   class UnknownOption < Error
