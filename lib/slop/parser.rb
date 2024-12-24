@@ -67,9 +67,17 @@ module Slop
 
     private
 
+    def process(option, arg)
+      option.ensure_call(arg)
+    end
+
     def try_process(flag, arg)
-      if flag.start_with?("-") && !suppress_errors?
-        raise UnknownOption.new("unknown option `#{flag}'", "#{flag}")
+      if option = matching_option(flag)
+        process(option, arg)
+      else
+        if flag.start_with?("-") && !suppress_errors?
+          raise UnknownOption.new("unknown option `#{flag}'", "#{flag}")
+        end
       end
     end
 
