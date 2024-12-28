@@ -37,6 +37,10 @@ module Slop
         if !suppress_errors?
           raise Slop::MissingArgument.new("missing argument for #{flag}", flags)
         end
+      else
+        if validate_type? && !valid?(value) && !suppress_errors?
+          raise Slop::InvalidOptionValue.new("invalid value for #{flag}", flags)
+        end
       end
     end
 
@@ -53,6 +57,10 @@ module Slop
 
     def suppress_errors?
       config[:suppress_errors]
+    end
+
+    def validate_type?
+      config[:validate_type] || config[:validate_types]
     end
 
     def flag

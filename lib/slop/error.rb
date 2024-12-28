@@ -24,4 +24,13 @@ module Slop
 
   class MissingRequiredOption < Error
   end
+
+  class InvalidOptionValue < Error
+    attr_reader :flag
+
+    def initialize(msg, flag)
+      super(msg)
+      @flag = flag
+    end
+  end
 end
