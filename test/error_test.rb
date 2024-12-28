@@ -61,3 +61,11 @@ describe Slop::MissingRequiredOption do
     opts.parse []
   end
 end
+
+describe Slop::InvalidOptionValue do
+  it "raises when an option has an invalid value" do
+    opts = Slop::Options.new(validate_types: true)
+    opts.integer "-n", "--number", default: 10
+    assert_raises(Slop::InvalidOptionValue) { opts.parse %w(-n foo) }
+  end
+end
