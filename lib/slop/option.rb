@@ -17,6 +17,8 @@ module Slop
 
     attr_reader :count
 
+    attr_reader :block
+
     def initialize(flags, desc, **config, &block)
       @flags  = flags
       @desc   = desc
@@ -41,7 +43,16 @@ module Slop
         if validate_type? && !valid?(value) && !suppress_errors?
           raise Slop::InvalidOptionValue.new("invalid value for #{flag}", flags)
         end
+
+        @value = valid?(value) && call(value)
       end
+
+      block.call(@value) if block.respond_to?(:call)
+    end
+
+    def call(_value)
+      raise NotImplementedError,
+        "you must override the `call' method for option #{self.class}"
     end
 
     def finish(_result)
@@ -71,6 +82,10 @@ module Slop
       key = config[:key] || flags.last.sub(/\A--?/, '')
       key = key.tr '-', '_' if underscore_flags?
       key.to_sym
+    end
+
+    def valid?(value)
+      true
     end
 
     def underscore_flags?

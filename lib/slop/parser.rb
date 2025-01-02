@@ -6,6 +6,8 @@ module Slop
 
     attr_reader :config
 
+    attr_reader :arguments
+
     def initialize(options, **config)
       @options = options
       @config  = config
@@ -38,6 +40,19 @@ module Slop
         end
 
         if opt = try_process(flag, arg)
+          if opt.expects_argument?
+
+            if consume_next_argument?(orig_flag)
+              pairs.delete_at(idx + 1)
+            end
+
+            arguments.each_with_index do |argument, i|
+              if argument == orig_flag && !orig_flag.include?("=")
+                arguments.delete_at(i + 1)
+              end
+            end
+          end
+          arguments.delete(orig_flag)
         end
       end
 
@@ -67,8 +82,14 @@ module Slop
 
     private
 
+    def consume_next_argument?(flag)
+      return false if flag.include?("=")
+      return true if flag.start_with?("--")
+    end
+
     def process(option, arg)
       option.ensure_call(arg)
+      option
     end
 
     def try_process(flag, arg)
