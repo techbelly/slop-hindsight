@@ -24,4 +24,20 @@ describe Slop::Parser do
       assert_equal [@unused], @parser.unused_options
     end
   end
+
+  describe "#arguments" do
+    it "returns all unparsed arguments" do
+      assert_equal %w(foo argument), @parser.arguments
+    end
+
+    it "correctly removes the option argument" do
+      @parser.parse %w(lee --name lee lee)
+      assert_equal %w(lee lee), @parser.arguments
+    end
+
+    it "correctly removes options that use =" do
+      @parser.parse %w(lee --name=lee lee)
+      assert_equal %w(lee lee), @parser.arguments
+    end
+  end
 end
