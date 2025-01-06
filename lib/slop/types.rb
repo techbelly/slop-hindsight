@@ -50,6 +50,12 @@ module Slop
   end
 
   class FloatOption < Option
+    FLOAT_STRING_REGEXP = /\A[+-]?(?:0|[1-9]\d*)(?:\.\d*)?(?:[eE][+-]?\d+)?\z/.freeze
+
+    def valid?(value)
+      value =~ FLOAT_STRING_REGEXP
+    end
+
     def call(value)
       value.to_f
     end
