@@ -2,6 +2,34 @@
 
 require 'test_helper'
 
+describe Slop::StringOption do
+  before do
+    @options = Slop::Options.new
+    @age     = @options.string "--name"
+    @minus   = @options.string "--zipcode"
+    @result  = @options.parse %w(--name Foo --zipcode 12345)
+  end
+
+  it "returns the value as a string" do
+    assert_equal "Foo", @result[:name]
+    assert_equal "12345", @result[:zipcode]
+  end
+end
+
+describe Slop::SymbolOption do
+  before do
+    @options = Slop::Options.new
+    @age     = @options.symbol "--name"
+    @minus   = @options.symbol "--zipcode"
+    @result  = @options.parse %w(--name Foo --zipcode 12345)
+  end
+
+  it "returns the value as a symbol" do
+    assert_equal :Foo, @result[:name]
+    assert_equal :'12345', @result[:zipcode]
+  end
+end
+
 describe Slop::IntegerOption do
   before do
     @options = Slop::Options.new
@@ -9,6 +37,17 @@ describe Slop::IntegerOption do
     @minus   = @options.integer "--minus", validate_type: true
     @plus    = @options.integer "--plus"
     @result  = @options.parse %w(--age 20 --minus -10 --plus +30)
+  end
+
+  it "returns the value as an integer" do
+    assert_equal 20, @result[:age]
+    assert_equal (-10), @result[:minus]
+    assert_equal 30, @result[:plus]
+  end
+
+  it "returns nil for non-numbers by default" do
+    @result.parser.parse %w(--age hello)
+    assert_nil @result[:age]
   end
 
   it "raises with invalid types" do
@@ -30,9 +69,65 @@ describe Slop::FloatOption do
     @result  = @options.parse %W(--apr #{@apr_value} --minus -6.1 --plus +9.4 --scientific-notation #{@scientific_notation_value})
   end
 
+  it "returns the value as a float" do
+    assert_equal @apr_value, @result[:apr]
+    assert_equal (-6.1), @result[:minus]
+    assert_equal 9.4, @result[:plus]
+  end
+
+  it "parses scientific notations" do
+    assert_equal @scientific_notation_value, @result[:scientific_notation]
+
+    @scientific_notation_value = 4E21
+    @result  = @options.parse %W(--scientific-notation #{@scientific_notation_value})
+    assert_equal @scientific_notation_value, @result[:scientific_notation]
+
+    @scientific_notation_value = 4.0e21
+    @result  = @options.parse %W(--scientific-notation #{@scientific_notation_value})
+    assert_equal @scientific_notation_value, @result[:scientific_notation]
+
+    @scientific_notation_value = -4e21
+    @result  = @options.parse %W(--scientific-notation #{@scientific_notation_value})
+    assert_equal @scientific_notation_value, @result[:scientific_notation]
+
+    @scientific_notation_value = 4e-21
+    @result  = @options.parse %W(--scientific-notation #{@scientific_notation_value})
+    assert_equal @scientific_notation_value, @result[:scientific_notation]
+  end
+
+  it "returns nil for non-numbers by default" do
+    @result.parser.parse %w(--apr hello)
+    assert_nil @result[:apr]
+  end
+
   it "raises with invalid types" do
     assert_raises(Slop::InvalidOptionValue) do
       @result.parser.parse %w(--minus foo)
     end
+  end
+end
+
+describe Slop::NullOption do
+  before do
+    @options = Slop::Options.new
+    @version = @options.null('--version')
+    @result  = @options.parse %w(--version)
+  end
+
+  it 'has a return value of true' do
+    assert_equal true, @result[:version]
+  end
+end
+
+describe Slop::RegexpOption do
+  before do
+    @options       = Slop::Options.new
+    @exclude       = @options.regexp "--exclude"
+    @exclude_value = "redirect|news"
+    @result        = @options.parse %W(--exclude #{@exclude_value})
+  end
+
+  it "returns the value as a Regexp" do
+    assert_equal Regexp.new(@exclude_value), @result[:exclude]
   end
 end

@@ -13,6 +13,52 @@ describe Slop::Parser do
     @result  = @parser.parse %w(foo -v --name lee argument)
   end
 
+  describe "for flag=argument" do
+    it "parses names and values" do
+      @options.integer "-p", "--port"
+      @result.parser.parse %w(--name=bob -p=123)
+      assert_equal "bob", @result[:name]
+      assert_equal 123, @result[:port]
+    end
+
+    it "includes = in strings" do
+      @result.parser.parse(%w(--name=b=b))
+      assert_equal "b=b", @result[:name]
+    end
+  end
+
+  it "parses arg with leading -" do
+    @options.string "-t", "--text"
+    @result.parser.parse %w(--name=bob --text --sometext)
+    assert_equal "bob", @result[:name]
+    assert_equal "--sometext", @result[:text]
+  end
+
+  it "parses regexp arg with leading -" do
+    @options.regexp "--pattern"
+    @result.parser.parse %w(--pattern -x)
+    assert_equal(/-x/, @result[:pattern])
+  end
+
+  it "parses negative integer" do
+    @options.integer "-p", "--port"
+    @result.parser.parse %w(--name=bob --port -123)
+    assert_equal "bob", @result[:name]
+    assert_equal(-123, @result[:port])
+  end
+
+  describe "parsing grouped short flags" do
+    before do
+      @options.bool "-q", "--quiet"
+    end
+
+    it "doesn't screw up single hyphen long options" do
+      @options.string "-host"
+      @result.parser.parse %w(-host localhost)
+      assert_equal "localhost", @result[:host]
+    end
+  end
+
   describe "#used_options" do
     it "returns all options that were parsed" do
       assert_equal [@verbose, @name], @parser.used_options
