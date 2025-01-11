@@ -62,6 +62,10 @@ module Slop
       true
     end
 
+    def value
+      @value || default_value
+    end
+
     def default_value
       config[:default]
     end

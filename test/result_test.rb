@@ -32,4 +32,32 @@ describe Slop::Result do
     @result.parser.parse %w(--foo bar)
     assert_equal output, "bar"
   end
+
+  describe "#[]" do
+    it "returns an options value" do
+      assert_equal "lee", @result["name"]
+      assert_equal "lee", @result[:name]
+      assert_equal "lee", @result["--name"]
+      assert_equal "bar", @result["long_option"]
+      assert_equal "bar", @result[:long_option]
+      assert_equal "bar", @result["--long-option"]
+    end
+  end
+
+  describe "#option" do
+    it "returns an option by flag" do
+      assert_equal @verbose, @result.option("--verbose")
+      assert_equal @verbose, @result.option("-v")
+      assert_equal @long_option, @result.option("--long-option")
+    end
+
+    it "ignores prefixed hyphens" do
+      assert_equal @verbose, @result.option("verbose")
+      assert_equal @verbose, @result.option("-v")
+    end
+
+    it "returns nil if nothing is found" do
+      assert_nil @result.option("foo")
+    end
+  end
 end
