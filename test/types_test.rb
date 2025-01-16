@@ -107,6 +107,36 @@ describe Slop::FloatOption do
   end
 end
 
+describe Slop::ArrayOption do
+  before do
+    @options = Slop::Options.new
+    @files   = @options.array "--files"
+    @multi   = @options.array "-M", delimiter: nil
+    @delim   = @options.array "-d", delimiter: ":"
+    @limit   = @options.array "-l", limit: 2
+    @result  = @options.parse %w(--files foo.txt,bar.rb)
+  end
+
+  it "parses comma separated args" do
+    assert_equal %w(foo.txt bar.rb), @result[:files]
+  end
+
+  it "collects multiple option values" do
+    @result.parser.parse %w(--files foo.txt --files bar.rb)
+    assert_equal %w(foo.txt bar.rb), @result[:files]
+  end
+
+  it "can use a custom delimiter" do
+    @result.parser.parse %w(-d foo.txt:bar.rb)
+    assert_equal %w(foo.txt bar.rb), @result[:d]
+  end
+
+  it "can use a custom limit" do
+    @result.parser.parse %w(-l foo,bar,baz)
+    assert_equal ["foo", "bar,baz"], @result[:l]
+  end
+end
+
 describe Slop::NullOption do
   before do
     @options = Slop::Options.new

@@ -27,6 +27,15 @@ describe Slop::Parser do
     end
   end
 
+  it "parses flag=''" do
+    @options.string "--str"
+    @options.array "--arr", default: ["array"]
+    @result.parser.parse %(--str="" --arr="").shellsplit
+
+    assert_equal "", @result[:str]
+    assert_equal [], @result[:arr]
+  end
+
   it "parses arg with leading -" do
     @options.string "-t", "--text"
     @result.parser.parse %w(--name=bob --text --sometext)
