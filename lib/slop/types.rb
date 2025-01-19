@@ -69,6 +69,10 @@ module Slop
       end
     end
 
+    def default_value
+      config[:default] || []
+    end
+
     def delimiter
       config.fetch(:delimiter, ",")
     end
