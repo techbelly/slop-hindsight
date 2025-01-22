@@ -85,6 +85,7 @@ module Slop
     def consume_next_argument?(flag)
       return false if flag.include?("=")
       return true if flag.start_with?("--")
+      return true if /\A-[a-zA-Z]\z/ === flag
     end
 
     def process(option, arg)

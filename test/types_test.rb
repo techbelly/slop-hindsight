@@ -130,6 +130,11 @@ describe Slop::ArrayOption do
     assert_equal %w(foo.txt bar.rb), @result[:files]
   end
 
+  it "collects multiple option values with no delimiter" do
+    @result.parser.parse %w(-M foo,bar -M bar,qux)
+    assert_equal %w(foo,bar bar,qux), @result[:M]
+  end
+
   it "can use a custom delimiter" do
     @result.parser.parse %w(-d foo.txt:bar.rb)
     assert_equal %w(foo.txt bar.rb), @result[:d]

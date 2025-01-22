@@ -66,6 +66,8 @@ module Slop
       @value ||= []
       if delimiter
         @value.concat value.split(delimiter, limit)
+      else
+        @value << value
       end
     end
 
