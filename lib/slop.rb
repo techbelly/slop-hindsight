@@ -8,6 +8,10 @@ require 'slop/types'
 require 'slop/error'
 
 module Slop
+  def self.parse(items = ARGV, **config, &block)
+    Options.new(**config, &block).parse(items)
+  end
+
   def self.option_defined?(name)
     const_defined?(string_to_option(name.to_s))
   rescue NameError
