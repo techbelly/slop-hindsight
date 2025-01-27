@@ -13,6 +13,12 @@ describe Slop::Parser do
     @result  = @parser.parse %w(foo -v --name lee argument)
   end
 
+  it "ignores everything after --" do
+    @parser.parse %w(-v -- -v --name lee)
+    assert_equal [@verbose], @parser.used_options
+    assert_equal ["-v", "--name", "lee"], @parser.arguments
+  end
+
   describe "for flag=argument" do
     it "parses names and values" do
       @options.integer "-p", "--port"
@@ -90,6 +96,11 @@ describe Slop::Parser do
   describe "#arguments" do
     it "returns all unparsed arguments" do
       assert_equal %w(foo argument), @parser.arguments
+    end
+
+    it "does not return --" do
+      @parser.parse %w(-v -- --name lee)
+      assert_equal %w(--name lee), @parser.arguments
     end
 
     it "correctly removes the option argument" do
