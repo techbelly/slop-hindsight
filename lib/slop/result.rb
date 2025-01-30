@@ -20,6 +20,11 @@ module Slop
       end
     end
 
+    def arguments
+      parser.arguments
+    end
+    alias args arguments
+
     private
 
     def clean_key(key)
