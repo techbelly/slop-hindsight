@@ -86,6 +86,7 @@ module Slop
       return false if flag.include?("=")
       return true if flag.start_with?("--")
       return true if /\A-[a-zA-Z]\z/ === flag
+      false
     end
 
     def process(option, arg)
@@ -96,10 +97,19 @@ module Slop
     def try_process(flag, arg)
       if option = matching_option(flag)
         process(option, arg)
+      elsif flag =~ /\A-[^-]{2,}/
+        try_process_smashed_arg(flag) || try_process_grouped_flags(flag, arg)
       else
         if flag.start_with?("-") && !suppress_errors?
           raise UnknownOption.new("unknown option `#{flag}'", "#{flag}")
         end
+      end
+    end
+
+    def try_process_smashed_arg(flag)
+      option = matching_option(flag[0, 2])
+      if option && option.expects_argument?
+        process(option, flag[2..-1])
       end
     end
 
