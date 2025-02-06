@@ -113,6 +113,14 @@ module Slop
       end
     end
 
+    def try_process_grouped_flags(flag, arg)
+      flags = flag.split("").drop(1).map { |f| "-#{f}" }
+      last  = flags.pop
+
+      flags.each { |f| try_process(f, nil) }
+      try_process(last, arg)
+    end
+
     def suppress_errors?
       config[:suppress_errors]
     end
