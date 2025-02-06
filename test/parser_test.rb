@@ -81,6 +81,11 @@ describe Slop::Parser do
       @options.bool "-q", "--quiet"
     end
 
+    it "sends the argument to the last flag" do
+      @result.parser.parse %w(-qvn foo)
+      assert_equal "foo", @result[:name]
+    end
+
     it "doesn't screw up single hyphen long options" do
       @options.string "-host"
       @result.parser.parse %w(-host localhost)
