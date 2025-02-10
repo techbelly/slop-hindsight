@@ -44,6 +44,23 @@ describe Slop::Result do
     end
   end
 
+  describe "#fetch" do
+    it "returns nil when an option is not provided and it does not have a default value" do
+      @options.string("--hello")
+      @result.parser.parse %w()
+
+      assert_nil @result.fetch('hello')
+    end
+  end
+
+  describe "#method_missing" do
+    it "checks if options have been used" do
+      assert_equal true, @result.verbose?
+      assert_equal false, @result.unused?
+      assert_equal true, @result.long_option?
+    end
+  end
+
   describe "#option" do
     it "returns an option by flag" do
       assert_equal @verbose, @result.option("--verbose")

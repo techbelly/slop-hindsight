@@ -81,6 +81,12 @@ describe Slop::Parser do
       @options.bool "-q", "--quiet"
     end
 
+    it "parses boolean flags" do
+      @result.parser.parse %w(-qv)
+      assert_equal true, @result.quiet?
+      assert_equal true, @result.verbose?
+    end
+
     it "sends the argument to the last flag" do
       @result.parser.parse %w(-qvn foo)
       assert_equal "foo", @result[:name]
