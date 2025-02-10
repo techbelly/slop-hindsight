@@ -20,6 +20,20 @@ module Slop
       end
     end
 
+    def method_missing(name, *args, &block)
+      if respond_to_missing?(name)
+        (o = option(name.to_s.chomp("?"))) && used_options.include?(o)
+      end
+    end
+
+    def respond_to_missing?(name, include_private = false)
+      name.to_s.end_with?("?") || super
+    end
+
+    def used_options
+      parser.used_options
+    end
+
     def arguments
       parser.arguments
     end
