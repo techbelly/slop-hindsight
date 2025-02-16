@@ -62,6 +62,14 @@ describe Slop::Result do
     end
   end
 
+  describe "#[]=" do
+    it "sets an options value" do
+      assert_equal "lee", @result["name"]
+      @result["name"] = "bob"
+      assert_equal "bob", @result[:name]
+    end
+  end
+
   describe "#method_missing" do
     it "checks if options have been used" do
       assert_equal true, @result.verbose?

@@ -14,6 +14,13 @@ module Slop
     end
     alias get []
 
+    def []=(flag, value)
+      if o = option(flag)
+        o.value = value
+      end
+    end
+    alias set []=
+
     def option(flag)
       options.find do |o|
         o.flags.any? { |f| clean_key(f) == clean_key(flag) }
