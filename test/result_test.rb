@@ -68,6 +68,12 @@ describe Slop::Result do
       @result["name"] = "bob"
       assert_equal "bob", @result[:name]
     end
+
+    it "raises if an option isn't found" do
+      assert_raises ArgumentError do
+        @result["zomg"] = "something"
+      end
+    end
   end
 
   describe "#method_missing" do
