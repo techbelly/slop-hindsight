@@ -17,6 +17,8 @@ module Slop
     def []=(flag, value)
       if o = option(flag)
         o.value = value
+      else
+        raise ArgumentError, "no option with flag `#{flag}'"
       end
     end
     alias set []=
