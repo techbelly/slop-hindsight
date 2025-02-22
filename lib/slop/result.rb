@@ -14,6 +14,16 @@ module Slop
     end
     alias get []
 
+    def fetch(flag)
+      o = option(flag)
+      if o.nil?
+        cleaned_key = clean_key(flag)
+        raise UnknownOption.new("option not found: '#{cleaned_key}'", "#{cleaned_key}")
+      else
+        o.value
+      end
+    end
+
     def []=(flag, value)
       if o = option(flag)
         o.value = value
