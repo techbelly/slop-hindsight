@@ -66,6 +66,10 @@ module Slop
       true
     end
 
+    def null?
+      false
+    end
+
     def value
       @value || default_value
     end
