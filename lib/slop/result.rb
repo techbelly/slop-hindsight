@@ -58,6 +58,11 @@ module Slop
     end
     alias args arguments
 
+    def to_hash
+      Hash[options.reject(&:null?).map { |o| [o.key, o.value] }]
+    end
+    alias to_h to_hash
+
     private
 
     def clean_key(key)

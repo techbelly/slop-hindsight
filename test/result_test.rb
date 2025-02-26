@@ -5,6 +5,9 @@ require 'test_helper'
 module Slop
   class ReverseEverythingOption < BoolOption
     def finish(result)
+      result.used_options.grep(Slop::StringOption).each do |opt|
+        opt.value = opt.value.reverse
+      end
     end
   end
 end
@@ -33,6 +36,13 @@ describe Slop::Result do
 
     @result.parser.parse %w(--foo)
     assert_equal "bar", @result[:foo]
+  end
+
+  it "handles custom finishing" do
+    @options.string "--foo"
+    @options.reverse_everything "-r"
+    @result.parser.parse %w(-r --name lee --foo bar)
+    assert_equal %w(eel rab), @result.to_hash.values_at(:name, :foo)
   end
 
   it "yields arguments to option blocks" do
@@ -114,6 +124,13 @@ describe Slop::Result do
 
     it "returns nil if nothing is found" do
       assert_nil @result.option("foo")
+    end
+  end
+
+  describe "#to_hash" do
+    it "returns option keys and values" do
+      assert_equal({ verbose: true, name: "lee", unused: nil, long_option: "bar" },
+                   @result.to_hash)
     end
   end
 end

@@ -27,6 +27,10 @@ module Slop
       !force_false?
     end
 
+    def value
+      super
+    end
+
     def force_false?
       FALSE_VALUES.include?(explicit_value)
     end
