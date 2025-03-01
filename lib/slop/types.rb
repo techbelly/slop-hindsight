@@ -95,5 +95,8 @@ module Slop
   end
 
   class NullOption < BoolOption
+    def null?
+      true
+    end
   end
 end

@@ -156,6 +156,10 @@ describe Slop::NullOption do
   it 'has a return value of true' do
     assert_equal true, @result[:version]
   end
+
+  it 'is not included in to_hash' do
+    assert_equal({}, @result.to_hash)
+  end
 end
 
 describe Slop::RegexpOption do
