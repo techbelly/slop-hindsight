@@ -97,6 +97,8 @@ module Slop
     def try_process(flag, arg)
       if option = matching_option(flag)
         process(option, arg)
+      elsif flag.start_with?("--no-") && option = matching_option(flag.sub("no-", ""))
+        process(option, false)
       elsif flag =~ /\A-[^-]{2,}/
         try_process_smashed_arg(flag) || try_process_grouped_flags(flag, arg)
       else

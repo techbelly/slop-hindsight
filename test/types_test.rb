@@ -30,6 +30,40 @@ describe Slop::SymbolOption do
   end
 end
 
+describe Slop::BoolOption do
+  before do
+    @options  = Slop::Options.new
+    @verbose  = @options.bool "--verbose", validate_type: true
+    @quiet    = @options.bool "--quiet"
+    @inversed = @options.bool "--inversed", default: true
+    @explicit = @options.bool "--explicit", validate_type: true
+    @bloc     = @options.bool("--bloc"){|val| (@bloc_val ||= []) << val}
+    @result   = @options.parse %w(--verbose --no-inversed
+                                  --bloc --no-bloc
+                                  --explicit=false)
+  end
+
+  it "returns true if used" do
+    assert_equal true, @result[:verbose]
+  end
+
+  it "will invert the value passed to &block via --no- prefix" do
+    assert_equal [true, false], @bloc_val
+  end
+
+  it "raises with invalid types" do
+    assert_raises(Slop::InvalidOptionValue) do
+      @result.parser.parse %w(--verbose foo)
+    end
+  end
+
+  it "returns true if used and ignores the value" do
+    @result.parser.parse %w(--quiet foo)
+
+    assert_equal true, @result[:quiet]
+  end
+end
+
 describe Slop::IntegerOption do
   before do
     @options = Slop::Options.new
