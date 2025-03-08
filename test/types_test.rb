@@ -47,8 +47,16 @@ describe Slop::BoolOption do
     assert_equal true, @result[:verbose]
   end
 
+  it "returns false if not used" do
+    assert_equal false, @result[:quiet]
+  end
+
   it "will invert the value passed to &block via --no- prefix" do
     assert_equal [true, false], @bloc_val
+  end
+
+  it "returns false when explicitly false" do
+    assert_equal false, @result[:explicit]
   end
 
   it "raises with invalid types" do
