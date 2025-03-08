@@ -40,6 +40,10 @@ module Slop
       FALSE_VALUES.include?(explicit_value)
     end
 
+    def default_value
+      config[:default] || false
+    end
+
     def expects_argument?
       false
     end
