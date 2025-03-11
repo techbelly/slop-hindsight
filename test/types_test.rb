@@ -51,6 +51,10 @@ describe Slop::BoolOption do
     assert_equal false, @result[:quiet]
   end
 
+  it "can be inversed via --no- prefix" do
+    assert_equal false, @result[:inversed]
+  end
+
   it "will invert the value passed to &block via --no- prefix" do
     assert_equal [true, false], @bloc_val
   end

@@ -33,7 +33,11 @@ module Slop
     end
 
     def value
-      super
+      if force_false?
+        false
+      else
+        super
+      end
     end
 
     def force_false?
