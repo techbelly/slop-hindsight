@@ -104,6 +104,10 @@ module Slop
     def add_option(option)
       options.each do |o|
         flags = o.flags & option.flags
+
+        if flags.any?
+          raise ArgumentError, "duplicate flags: #{flags}"
+        end
       end
 
       options << option

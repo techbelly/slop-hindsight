@@ -31,6 +31,11 @@ describe Slop::Options do
       option = @options.on("--foo")
       assert_equal [option], @options.to_a
     end
+
+    it "raises an error when a duplicate flag is used" do
+      @options.on("--foo")
+      assert_raises(ArgumentError) { @options.on("--foo") }
+    end
   end
 
   describe "#separator" do
