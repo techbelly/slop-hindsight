@@ -82,6 +82,10 @@ module Slop
       config[:suppress_errors]
     end
 
+    def required?
+      config[:required]
+    end
+
     def validate_type?
       config[:validate_type] || config[:validate_types]
     end

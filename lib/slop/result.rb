@@ -42,6 +42,8 @@ module Slop
     def method_missing(name, *args, &block)
       if respond_to_missing?(name)
         (o = option(name.to_s.chomp("?"))) && used_options.include?(o)
+      else
+        super
       end
     end
 
@@ -53,6 +55,10 @@ module Slop
       parser.used_options
     end
 
+    def unused_options
+      parser.unused_options
+    end
+
     def arguments
       parser.arguments
     end
@@ -62,6 +68,10 @@ module Slop
       Hash[options.reject(&:null?).map { |o| [o.key, o.value] }]
     end
     alias to_h to_hash
+
+    def to_s(**opts)
+      options.to_s(**opts)
+    end
 
     private
 
