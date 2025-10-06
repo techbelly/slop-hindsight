@@ -8,6 +8,8 @@ require 'slop/types'
 require 'slop/error'
 
 module Slop
+  VERSION = '4.10.1'
+
   def self.parse(items = ARGV, **config, &block)
     Options.new(**config, &block).parse(items)
   end

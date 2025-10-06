@@ -65,6 +65,7 @@ module Slop
       value.to_i
     end
   end
+  IntOption = IntegerOption
 
   class FloatOption < Option
     FLOAT_STRING_REGEXP = /\A[+-]?(?:0|[1-9]\d*)(?:\.\d*)?(?:[eE][+-]?\d+)?\z/.freeze

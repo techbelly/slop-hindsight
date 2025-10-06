@@ -20,7 +20,9 @@ module Slop
 
     attr_reader :config
 
-    attr_reader :banner
+    attr_accessor :banner
+
+    attr_accessor :validate_types
 
     def initialize(**config, &block)
       @options    = []
@@ -61,6 +63,8 @@ module Slop
       if respond_to_missing?(name)
         config[:type] = name
         on(*args, **config, &block)
+      else
+        super
       end
     end
 
